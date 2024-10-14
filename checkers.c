@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdint.h>
 #include "utilities.h"
@@ -6,16 +5,13 @@
 
 #define BOARD_SIZE 8
 
-// Define bitboards for pieces
 uint64_t blackPieces, redPieces;
 uint64_t blackKings, redKings;
 
-// Function prototypes
 void initializeBitboards();
 void printBoard();
 int letterToColumn(char colLetter);
 
-// positions
 void initializeBitboards() {
     blackPieces = 0x0000000000AA55AAULL;
     redPieces = 0x55AA550000000000ULL;
@@ -58,7 +54,6 @@ int letterToColumn(char colLetter) {
     return colLetter - 'A';
 }
 
-// Main function to play the game
 int main() {
     initializeBitboards();
     char startColLetter, endColLetter;
@@ -70,7 +65,6 @@ int main() {
         printf("Enter move (ex., 2 A 3 B): ");
         scanf("%d %c %d %c", &startRow, &startColLetter, &endRow, &endColLetter);
 
-        // Convert to 0-based index
         startRow -= 1;
         endRow -= 1;
         int startCol = letterToColumn(startColLetter);
@@ -80,13 +74,13 @@ int main() {
     if (isCaptureMove(blackPieces, redPieces, startRow, startCol, endRow, endCol)) {
         // Perform the capture
         if (capturePiece(&blackPieces, &redPieces, startRow, startCol, endRow, endCol)) {
-            promoteKing(&blackPieces, &blackKings, endRow, player);
+            promoteKing(&blackPieces, &blackKings, endRow, endCol, player);
             player = 2;  // Switch to red player
         } else {
             printf("Invalid capture move, try again.\n");
         }
     } else if (movePiece(&blackPieces, &redPieces, startRow, startCol, endRow, endCol)) {
-        promoteKing(&blackPieces, &blackKings, endRow, player);
+        promoteKing(&blackPieces, &blackKings, endRow, endCol, player);
         player = 2;  // Switch to red player
     } else {
         printf("Invalid move, try again.\n");
@@ -95,13 +89,13 @@ int main() {
     if (isCaptureMove(redPieces, blackPieces, startRow, startCol, endRow, endCol)) {
         // Perform the capture
         if (capturePiece(&redPieces, &blackPieces, startRow, startCol, endRow, endCol)) {
-            promoteKing(&redPieces, &redKings, endRow, player);
+            promoteKing(&redPieces, &redKings, endRow, endCol, player);
             player = 1;  // Switch to black player
         } else {
             printf("Invalid capture move, try again.\n");
         }
     } else if (movePiece(&redPieces, &blackPieces, startRow, startCol, endRow, endCol)) {
-        promoteKing(&redPieces, &redKings, endRow, player);
+        promoteKing(&redPieces, &redKings, endRow, endCol, player);
         player = 1;  // Switch to black player
     } else {
         printf("Invalid move, try again.\n");
