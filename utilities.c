@@ -1,6 +1,5 @@
 #include "utilities.h"
 
-// Move a piece using bitwise operations
 int movePiece(uint64_t* playerPieces, uint64_t* opponentPieces, int startRow, int startCol, int endRow, int endCol) {
     int startIndex = startRow * 8 + startCol;
     int endIndex = endRow * 8 + endCol;
@@ -9,7 +8,6 @@ int movePiece(uint64_t* playerPieces, uint64_t* opponentPieces, int startRow, in
         return 0;  // No piece to move
     }
 
-    // Clear the piece from the start position and set it at the end position
     *playerPieces &= ~(1ULL << startIndex);  // Clear start bit
     *playerPieces |= (1ULL << endIndex);     // Set end bit
 
@@ -17,8 +15,8 @@ int movePiece(uint64_t* playerPieces, uint64_t* opponentPieces, int startRow, in
 }
 
 // Promote a piece to king if it reaches the opposite end
-void promoteKing(uint64_t* playerPieces, uint64_t* playerKings, int endRow, int player) {
-    int endIndex = endRow * 8;
+void promoteKing(uint64_t* playerPieces, uint64_t* playerKings, int endRow, int endCol, int player) {
+    int endIndex = endRow * 8 + endCol;
     if ((player == 1 && endRow == 7) || (player == 2 && endRow == 0)) {
         // Promote to king (transfer from pieces to kings bitboard)
         *playerKings |= *playerPieces & (1ULL << endIndex);  // Set king bit
